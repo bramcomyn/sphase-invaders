@@ -17,9 +17,9 @@ const config: Phaser.Types.Core.GameConfig = {
 const game = new Phaser.Game(config);
 
 function preload(this: Phaser.Scene) {
-    this.load.image("logo", "assets/logo.png");
+    this.load.image("spaceship", "assets/spaceship.png");
 }
 
 function create(this: Phaser.Scene) {
-    this.add.image(400, 300, "logo");
+    this.add.image(400, 500, "spaceship");
 }
