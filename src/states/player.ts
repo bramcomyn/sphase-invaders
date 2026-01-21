@@ -1,4 +1,5 @@
 import { PLAYER_SPEED } from "../util/constants";
+import { StateMachine } from "./state-machine";
 
 export enum PlayerState {
     
@@ -19,7 +20,7 @@ interface StateHandlers {
 
 };
 
-export class PlayerStateMachine {
+export class PlayerStateMachine implements StateMachine {
     
     constructor(
         private scene: Phaser.Scene,
@@ -28,7 +29,7 @@ export class PlayerStateMachine {
         private state: PlayerState = PlayerState.Idle
     ) {}
 
-    update(time: number, delta: number) {
+    update(time: number, delta: number): void {
 
         const next = states[this.state].onUpdate(this.scene, this.player, this.cursors);
         if (next !== this.state) {

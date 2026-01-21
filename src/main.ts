@@ -1,5 +1,6 @@
 import "phaser";
 import { PlayerStateMachine } from "./states/player";
+import { BulletStateMachine } from "./states/bullets";
 
 const config: Phaser.Types.Core.GameConfig = {
 
@@ -23,9 +24,12 @@ const config: Phaser.Types.Core.GameConfig = {
     
 };
 
-let player: Phaser.Physics.Arcade.Sprite
+let player: Phaser.Physics.Arcade.Sprite;
+let bullets: Phaser.Physics.Arcade.Group;
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+
 let playerState: PlayerStateMachine;
+let bulletState: BulletStateMachine;
 
 const game = new Phaser.Game(config);
 
@@ -35,16 +39,25 @@ function preload(this: Phaser.Scene) {
         frameWidth: 32,
         frameHeight: 32
     });
+
+    this.load.spritesheet("bullet", "assets/bullet.png", {
+        frameWidth: 32,
+        frameHeight: 32
+    });
     
 }
 
 function create(this: Phaser.Scene) {
 
     cursors = this.input.keyboard?.createCursorKeys()!;
+
     player = this.physics.add.sprite(400, 500, "spaceship");
     playerState = new PlayerStateMachine(this, player, cursors);
-
     player.setCollideWorldBounds(true);
+
+    bullets = this.physics.add.group();
+    bulletState = new BulletStateMachine(this, player, cursors, bullets);
+    this.physics.world.on("worldbounds", bulletState.destroyIfOutOfBounds, bulletState);
 
     // TODO: update sprites to have real animations
     
@@ -68,5 +81,6 @@ function update(this: Phaser.Scene, time: number, delta: number) {
 
     // TODO: update game loop
     playerState.update(time, delta);
+    bulletState.update(time, delta);
     
 }
