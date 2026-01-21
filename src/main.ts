@@ -1,7 +1,10 @@
 import "phaser";
+
+import { PLAYER_INITIAL_X, PLAYER_INITIAL_Y } from "./util/constants";
+
 import { PlayerStateMachine } from "./states/player";
 import { BulletStateMachine } from "./states/bullets";
-import { PLAYER_INITIAL_X, PLAYER_INITIAL_Y } from "./util/constants";
+import { EnemyStateMachine } from "./states/enemies";
 
 const config: Phaser.Types.Core.GameConfig = {
 
@@ -27,10 +30,13 @@ const config: Phaser.Types.Core.GameConfig = {
 
 let player: Phaser.Physics.Arcade.Sprite;
 let bullets: Phaser.Physics.Arcade.Group;
+let enemies: Phaser.Physics.Arcade.Group;
+
 let cursors: Phaser.Types.Input.Keyboard.CursorKeys;
 
 let playerState: PlayerStateMachine;
 let bulletState: BulletStateMachine;
+let enemyState: EnemyStateMachine;
 
 const game = new Phaser.Game(config);
 
@@ -45,10 +51,15 @@ function preload(this: Phaser.Scene) {
         frameWidth: 32,
         frameHeight: 32
     });
+
+    this.load.spritesheet("enemy", "assets/enemy.png", {
+        frameWidth: 32,
+        frameHeight: 32
+    });
     
 }
 
-function create(this: Phaser.Scene) {
+function create(this: Phaser.Scene) { // TODO: split into multiple functions (DOTADIW)
 
     cursors = this.input.keyboard?.createCursorKeys()!;
 
@@ -59,6 +70,10 @@ function create(this: Phaser.Scene) {
     bullets = this.physics.add.group();
     bulletState = new BulletStateMachine(this, player, cursors, bullets);
     this.physics.world.on("worldbounds", bulletState.destroyIfOutOfBounds, bulletState);
+
+    enemies = this.physics.add.group();
+    enemyState = new EnemyStateMachine(this, enemies);
+    this.physics.add.overlap(bullets, enemies, enemyState.handleBulletHit, undefined, enemyState);
 
     // TODO: update sprites to have real animations
     
@@ -83,5 +98,6 @@ function update(this: Phaser.Scene, time: number, delta: number) {
     // TODO: update game loop
     playerState.update(time, delta);
     bulletState.update(time, delta);
+    enemyState.update(time, delta);
     
 }
