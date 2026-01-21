@@ -29,7 +29,7 @@ export class PlayerStateMachine implements StateMachine {
         private state: PlayerState = PlayerState.Idle
     ) {}
 
-    update(time: number, delta: number): void {
+    update(_time: number, _delta: number): void {
 
         const next = states[this.state].onUpdate(this.scene, this.player, this.cursors);
         if (next !== this.state) {
@@ -45,38 +45,38 @@ export class PlayerStateMachine implements StateMachine {
 const states: Record<PlayerState, StateHandlers> = {
 
     "idle": {
-        onEnter(scene, player) {
+        onEnter(_scene, player) {
             player.anims.stop();
             player.setVelocityX(0);
-        }, onUpdate(scene, player, cursors) {
+        }, onUpdate(_scene, _player, cursors) {
             if (cursors.left.isDown) return PlayerState.MoveLeft;
             if (cursors.right.isDown) return PlayerState.MoveRight;
             return PlayerState.Idle;
-        }, onExit(scene) {
+        }, onExit(_scene) {
 
         }
     },
     
     "move-left": {
-        onEnter(scene, player) {
+        onEnter(_scene, player) {
             player.anims.play("move-left");
             player.setVelocityX(-PLAYER_SPEED);
-        }, onUpdate(scene, player, cursors) {
+        }, onUpdate(_scene, _player, cursors) {
             if (!cursors.left.isDown) return PlayerState.Idle;
             return PlayerState.MoveLeft;
-        }, onExit(scene) {
+        }, onExit(_scene) {
 
         }
     },
     
     "move-right": {
-        onEnter(scene, player) {
+        onEnter(_scene, player) {
             player.anims.play("move-right");
             player.setVelocityX(PLAYER_SPEED);
-        }, onUpdate(scene, player, cursors) {
+        }, onUpdate(_scene, _player, cursors) {
             if (!cursors.right.isDown) return PlayerState.Idle;
             return PlayerState.MoveRight;
-        }, onExit(scene) {
+        }, onExit(_scene) {
 
         }
     }

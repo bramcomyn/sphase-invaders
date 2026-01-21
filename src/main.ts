@@ -12,6 +12,7 @@ const config: Phaser.Types.Core.GameConfig = {
     width: 800,
     height: 600,
     parent: "game-container",
+    pixelArt: true,
 
     scene: {
         preload: preload,
@@ -38,7 +39,7 @@ let playerState: PlayerStateMachine;
 let bulletState: BulletStateMachine;
 let enemyState: EnemyStateMachine;
 
-const game = new Phaser.Game(config);
+export const game = new Phaser.Game(config);
 
 function preload(this: Phaser.Scene) {
 
