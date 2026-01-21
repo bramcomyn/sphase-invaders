@@ -1,6 +1,7 @@
 import "phaser";
 import { PlayerStateMachine } from "./states/player";
 import { BulletStateMachine } from "./states/bullets";
+import { PLAYER_INITIAL_X, PLAYER_INITIAL_Y } from "./util/constants";
 
 const config: Phaser.Types.Core.GameConfig = {
 
@@ -51,7 +52,7 @@ function create(this: Phaser.Scene) {
 
     cursors = this.input.keyboard?.createCursorKeys()!;
 
-    player = this.physics.add.sprite(400, 500, "spaceship");
+    player = this.physics.add.sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y, "spaceship");
     playerState = new PlayerStateMachine(this, player, cursors);
     player.setCollideWorldBounds(true);
 
